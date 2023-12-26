@@ -13,4 +13,7 @@ export default defineNuxtConfig({
       title: 'DVC Kit',
     },
   },
+  typescript: {
+    typeCheck: 'build',
+  },
 })

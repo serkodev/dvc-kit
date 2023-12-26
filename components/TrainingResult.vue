@@ -27,13 +27,7 @@ const targetScore = computed(() => props.scores.reduce<number>((acc, cur) => acc
 </script>
 
 <template>
-  <div class="of-hidden rounded-lg bg-green-100 ring-1 ring-green-200">
-    <div class="py-2 text-center">
-      <div class="font-bold">
-        {{ operationTypeTitle(type) }}
-      </div>
-    </div>
-
+  <TrainingItemFrame :title="operationTypeTitle(type)">
     <div class="flex flex-col gap-2 px-3 py-3 bg-green-200 h-full">
       <div class="flex flex-col gap-1">
         <div class="flex items-center gap-2 bg-green-900 py-1 justify-center rounded">
@@ -56,5 +50,5 @@ const targetScore = computed(() => props.scores.reduce<number>((acc, cur) => acc
         </template>
       </div>
     </div>
-  </div>
+  </TrainingItemFrame>
 </template>

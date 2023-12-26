@@ -2,7 +2,7 @@
 import { TrainingType } from '~/utils/training'
 import type { Personality } from '~/utils/personalities'
 
-const selectedPersonality = ref<Personality>()
+const selectedPersonality = ref<Personality>(personalities.meticulous)
 
 const inputs = shallowRef({
   basic: {
@@ -18,6 +18,9 @@ const inputs = shallowRef({
     [TrainingType.strength]: 0,
   },
 })
+
+const enableOptions = ref(false)
+const customOperations = ref(allTrainingOperationsExpectFocus59)
 
 const result = ref<TrainingOperation[] | null | undefined>(undefined)
 const resultTrainedStatus = ref<TrainingStatus>({
@@ -70,7 +73,11 @@ async function handleSubmit() {
 
   setTimeout(() => {
     try {
-      result.value = calcMinimumOperations(status, selectedPersonality.value!.requirements)
+      result.value = calcMinimumOperations(
+        status,
+        (enableOptions.value ? JSON.parse(JSON.stringify(customOperations.value)) : undefined),
+        selectedPersonality.value!.requirements,
+      )
       resultTrainedStatus.value = inputs.value.trained
     } catch (e) {
       console.error(e)
@@ -91,56 +98,86 @@ watch(selectedPersonality, () => {
       訓練性格計算器
     </h1>
 
-    <form class="space-y-4" @submit.prevent="handleSubmit">
-      <div class="grid sm:grid-cols-2 gap-2">
-        <TrainingItem
-          v-model:basic="inputs.basic[TrainingType.agility]"
-          v-model:trained="inputs.trained[TrainingType.agility]"
-          :type="TrainingType.agility"
-        />
-        <TrainingItem
-          v-model:basic="inputs.basic[TrainingType.strength]"
-          v-model:trained="inputs.trained[TrainingType.strength]"
-          :type="TrainingType.strength"
-        />
-        <TrainingItem
-          v-model:basic="inputs.basic[TrainingType.focus]"
-          v-model:trained="inputs.trained[TrainingType.focus]"
-          :type="TrainingType.focus"
-        />
-        <TrainingItem
-          v-model:basic="inputs.basic[TrainingType.intellect]"
-          v-model:trained="inputs.trained[TrainingType.intellect]"
-          :type="TrainingType.intellect"
-        />
-      </div>
-
-      <h1 class="!mt-8 text-xl font-semibold">
-        目標性格
-      </h1>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-1">
-        <button
-          v-for="personality, key in personalities"
-          :key="key"
-          class="rounded px3 py-2"
-          :class="selectedPersonality?.title === personality.title ? 'bg-neutral-300' : 'bg-neutral-100 hover:bg-neutral-200'"
-          @click.prevent="selectedPersonality = personality"
-        >
-          {{ personality.title }}
-        </button>
-      </div>
-
-      <div v-if="selectedPersonality">
-        <div>
-          <div class="text-lg font-semibold mb-1">
-            {{ selectedPersonality.title }}
-          </div>
-          {{ selectedPersonality.requirementsDescription }}
+    <form class="space-y-8" @submit.prevent="handleSubmit">
+      <section>
+        <div class="grid sm:grid-cols-2 gap-2">
+          <TrainingItem
+            v-model:basic="inputs.basic[TrainingType.agility]"
+            v-model:trained="inputs.trained[TrainingType.agility]"
+            :type="TrainingType.agility"
+          />
+          <TrainingItem
+            v-model:basic="inputs.basic[TrainingType.strength]"
+            v-model:trained="inputs.trained[TrainingType.strength]"
+            :type="TrainingType.strength"
+          />
+          <TrainingItem
+            v-model:basic="inputs.basic[TrainingType.focus]"
+            v-model:trained="inputs.trained[TrainingType.focus]"
+            :type="TrainingType.focus"
+          />
+          <TrainingItem
+            v-model:basic="inputs.basic[TrainingType.intellect]"
+            v-model:trained="inputs.trained[TrainingType.intellect]"
+            :type="TrainingType.intellect"
+          />
         </div>
-      </div>
+      </section>
 
-      <input class="w-full py-2.5 bg-blue-100 text-blue-600 hover:bg-blue-200 rounded-lg cursor-pointer" type="submit" :disabled="loading" :value="loading ? '計算中...' : '計算'">
+      <section class="space-y-3">
+        <h2 class="text-xl font-semibold">
+          目標性格
+        </h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-1">
+          <button
+            v-for="personality, key in personalities"
+            :key="key"
+            class="rounded px3 py-2"
+            :class="selectedPersonality?.title === personality.title ? 'bg-neutral-300' : 'bg-neutral-100 hover:bg-neutral-200'"
+            @click.prevent="selectedPersonality = personality"
+          >
+            {{ personality.title }}
+          </button>
+        </div>
+
+        <div v-if="selectedPersonality">
+          <div>
+            <div class="text-lg font-semibold mb-1">
+              {{ selectedPersonality.title }}
+            </div>
+            {{ selectedPersonality.requirementsDescription }}
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-xl font-semibold flex items-center gap-2">
+          特殊訓練要求
+          <TheSwitcher v-model="enableOptions" />
+        </h2>
+
+        <template v-if="enableOptions">
+          <div class="my-2 text-sm text-neutral-500">
+            當把部份訓練取消勾選時，計算時將強制不會使用該訓練的分數。<br>
+            例如你可以把比較難玩的集中力 +5 及 +9 取消勾選，來增加訓練的成功率。
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-2">
+            <TrainingOptions v-model="customOperations" :type="TrainingType.agility" />
+            <TrainingOptions v-model="customOperations" :type="TrainingType.strength" />
+            <TrainingOptions v-model="customOperations" :type="TrainingType.focus" />
+            <TrainingOptions v-model="customOperations" :type="TrainingType.intellect" />
+          </div>
+        </template>
+      </section>
+
+      <input
+        class="w-full py-2.5 bg-blue-100 text-blue-600 hover:bg-blue-200 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        type="submit"
+        :disabled="loading || !selectedPersonality"
+        :value="loading ? '計算中...' : '計算'"
+      >
     </form>
 
     <div v-if="!loading && result !== undefined">

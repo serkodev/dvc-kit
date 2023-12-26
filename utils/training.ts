@@ -29,10 +29,23 @@ export const allTrainingOperations: TrainingOperation[] = [
   { type: TrainingType.intellect, score: 9 },
 ]
 
+export const allTrainingOperationsExpectFocus59: TrainingOperation[] = [
+  { type: TrainingType.agility, score: 3 },
+  { type: TrainingType.agility, score: 5 },
+  { type: TrainingType.agility, score: 9 },
+  { type: TrainingType.strength, score: 3 },
+  { type: TrainingType.strength, score: 5 },
+  { type: TrainingType.strength, score: 9 },
+  { type: TrainingType.focus, score: 3 },
+  { type: TrainingType.intellect, score: 3 },
+  { type: TrainingType.intellect, score: 5 },
+  { type: TrainingType.intellect, score: 9 },
+]
+
 export interface TrainingRequirements {
   valid?: (status: TrainingStatus) => boolean
   goal?: (status: TrainingStatus) => boolean
-  allowedOperations?: TrainingOperation[]
+  transformOperations?: (operations: TrainingOperation[]) => TrainingOperation[]
   maxOperations?: number
 }
 
@@ -49,11 +62,12 @@ export function getTrainedStatus(
 
 export function calcMinimumOperations(
   status: TrainingStatus,
+  operations: TrainingOperation[] = allTrainingOperations,
   {
     goal,
     valid = () => true,
-    allowedOperations: operations = allTrainingOperations,
-    maxOperations = 14,
+    transformOperations,
+    maxOperations = 20,
   }: TrainingRequirements = {},
 ): TrainingOperation[] | null {
   if (goal === undefined)
@@ -64,6 +78,11 @@ export function calcMinimumOperations(
 
   if (goal(status))
     return []
+
+  console.log('operations', operations)
+  if (transformOperations) {
+    operations = transformOperations(operations)
+  }
 
   for (let numOps = 1; numOps <= maxOperations; numOps++) {
     for (const ops of product(operations, numOps)) {

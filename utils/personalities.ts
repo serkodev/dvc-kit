@@ -33,7 +33,7 @@ export const personalities: Record<string, Personality> = {
   },
   distracted: {
     title: '漫不經心的',
-    requirementsDescription: '4 項能力值 (基礎值+訓練值) 每項能力值之間相差 ≧15 (例如：0, 15, 30, 45)；不得訓練集中力',
+    requirementsDescription: '4 項能力值 (基礎值+訓練值) 每項能力值之間相差 ≧15 (例如：0, 15, 30, 45)；不得訓練集中力（計算將會自動排除所有「集中力」訓練）',
     requirements: {
       goal: (v: TrainingStatus) => {
         for (let i: TrainingType = 0; i < 4; i++) {
@@ -45,7 +45,9 @@ export const personalities: Record<string, Personality> = {
         }
         return true
       },
-      allowedOperations: allTrainingOperations.filter(({ type }) => type !== TrainingType.focus),
+      transformOperations: (operations: TrainingOperation[]) => {
+        return operations.filter(({ type }) => type !== TrainingType.focus)
+      },
     },
   },
   dull: {

@@ -8,4 +8,9 @@ export default defineNuxtConfig({
   css: [
     '@unocss/reset/tailwind.css',
   ],
+  app: {
+    head: {
+      title: 'DVC Kit',
+    },
+  },
 })

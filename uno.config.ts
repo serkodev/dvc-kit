@@ -20,6 +20,6 @@ export default defineConfig({
     transformerVariantGroup(),
   ],
   shortcuts: {
-
+    'input-number-hide-spin': '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
   },
 })

@@ -1,7 +1,7 @@
 import { TrainingType, allTrainingOperations } from './training'
 import type { TrainingRequirements, TrainingStatus } from './training'
 
-interface Personality {
+export interface Personality {
   title: string
   requirementsDescription?: string
   requirements?: TrainingRequirements

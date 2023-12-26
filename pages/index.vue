@@ -1,16 +1,8 @@
 <script setup lang="ts">
 import { TrainingType } from '~/utils/training'
+import type { Personality } from '~/utils/personalities'
 
-definePageMeta({
-  alias: ['/personalities', '/personalities/:personality?'],
-})
-
-const route = useRoute()
-
-const selectedPersonality = computed(() => {
-  const { personality } = route.params
-  return typeof personality === 'string' ? personalities[personality] : null
-})
+const selectedPersonality = ref<Personality>()
 
 const inputs = shallowRef({
   basic: {
@@ -99,51 +91,57 @@ watch(selectedPersonality, () => {
       訓練性格計算器
     </h1>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-1">
-      <NuxtLink
-        v-for="personality, key in personalities"
-        :key="key"
-        active-class="bg-neutral-300"
-        class="rounded bg-neutral-100 hover:bg-neutral-200 px3 py-2"
-        :to="`/personalities/${key}`"
-      >
-        {{ personality.title }}
-      </NuxtLink>
-    </div>
+    <form class="space-y-4" @submit.prevent="handleSubmit">
+      <div class="grid sm:grid-cols-2 gap-2">
+        <TrainingItem
+          v-model:basic="inputs.basic[TrainingType.agility]"
+          v-model:trained="inputs.trained[TrainingType.agility]"
+          :type="TrainingType.agility"
+        />
+        <TrainingItem
+          v-model:basic="inputs.basic[TrainingType.strength]"
+          v-model:trained="inputs.trained[TrainingType.strength]"
+          :type="TrainingType.strength"
+        />
+        <TrainingItem
+          v-model:basic="inputs.basic[TrainingType.focus]"
+          v-model:trained="inputs.trained[TrainingType.focus]"
+          :type="TrainingType.focus"
+        />
+        <TrainingItem
+          v-model:basic="inputs.basic[TrainingType.intellect]"
+          v-model:trained="inputs.trained[TrainingType.intellect]"
+          :type="TrainingType.intellect"
+        />
+      </div>
 
-    <div v-if="selectedPersonality">
-      <form class="space-y-3" @submit.prevent="handleSubmit">
+      <h1 class="!mt-8 text-xl font-semibold">
+        目標性格
+      </h1>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-1">
+        <button
+          v-for="personality, key in personalities"
+          :key="key"
+          class="rounded px3 py-2"
+          :class="selectedPersonality?.title === personality.title ? 'bg-neutral-300' : 'bg-neutral-100 hover:bg-neutral-200'"
+          @click.prevent="selectedPersonality = personality"
+        >
+          {{ personality.title }}
+        </button>
+      </div>
+
+      <div v-if="selectedPersonality">
         <div>
           <div class="text-lg font-semibold mb-1">
             {{ selectedPersonality.title }}
           </div>
           {{ selectedPersonality.requirementsDescription }}
         </div>
-        <div class="grid sm:grid-cols-2 gap-2">
-          <TrainingItem
-            v-model:basic="inputs.basic[TrainingType.agility]"
-            v-model:trained="inputs.trained[TrainingType.agility]"
-            :type="TrainingType.agility"
-          />
-          <TrainingItem
-            v-model:basic="inputs.basic[TrainingType.strength]"
-            v-model:trained="inputs.trained[TrainingType.strength]"
-            :type="TrainingType.strength"
-          />
-          <TrainingItem
-            v-model:basic="inputs.basic[TrainingType.focus]"
-            v-model:trained="inputs.trained[TrainingType.focus]"
-            :type="TrainingType.focus"
-          />
-          <TrainingItem
-            v-model:basic="inputs.basic[TrainingType.intellect]"
-            v-model:trained="inputs.trained[TrainingType.intellect]"
-            :type="TrainingType.intellect"
-          />
-        </div>
-        <input class="w-full py-2.5 bg-blue-100 text-blue-600 hover:bg-blue-200 rounded-lg cursor-pointer" type="submit" :disabled="loading" :value="loading ? '計算中...' : '計算'">
-      </form>
-    </div>
+      </div>
+
+      <input class="w-full py-2.5 bg-blue-100 text-blue-600 hover:bg-blue-200 rounded-lg cursor-pointer" type="submit" :disabled="loading" :value="loading ? '計算中...' : '計算'">
+    </form>
 
     <div v-if="!loading && result !== undefined">
       <h1 class="my-4 text-2xl font-semibold">

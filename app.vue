@@ -1,5 +1,5 @@
 <template>
   <NuxtLayout>
-    <NuxtPage page-key="static" />
+    <NuxtPage />
   </NuxtLayout>
 </template>

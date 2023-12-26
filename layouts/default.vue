@@ -21,7 +21,7 @@
 
       <div>
         Made by
-        <NuxtLink class="text-blue" to="https://twitter.com/serkodev">
+        <NuxtLink class="text-blue" to="https://serko.dev/">
           SerKo
         </NuxtLink>
       </div>

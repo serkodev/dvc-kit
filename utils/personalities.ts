@@ -73,4 +73,53 @@ export const personalities: Record<string, Personality> = {
       },
     },
   },
+  classy: {
+    title: '有格調的',
+    description: '4 項能力值 (基礎值+訓練值) 皆 ≧20，3 代內純種',
+    requirements: {
+      goal: (v: TrainingStatusNormalized) => {
+        return v.every(s => s >= 20) && !isAllEqual(v)
+      },
+    },
+  },
+  noble: {
+    title: '高貴的',
+    description: '4 項能力值 (基礎值+訓練值) 皆 ≧20，5 代內純種',
+    requirements: {
+      goal: (v: TrainingStatusNormalized) => {
+        return v.every(s => s >= 20) && !isAllEqual(v)
+      },
+    },
+  },
+  arrogant: {
+    title: '傲慢的',
+    description: '4 項能力值 (基礎值+訓練值) 皆 ≧25，觀看數 ≧200',
+    requirements: {
+      goal: (v: TrainingStatusNormalized) => {
+        return v.every(s => s >= 25) && !isAllEqual(v)
+      },
+    },
+  },
+  perfectionist: {
+    title: '完美主義者',
+    description: '4 項能力值 (基礎值+訓練值) 皆 ≧20，在特定時間內進化至亞成體 (每隻龍的時間不一定，通常在 3 至 4 天內)',
+    requirements: {
+      goal: (v: TrainingStatusNormalized) => {
+        return v.every(s => s >= 20) && !isAllEqual(v)
+      },
+    },
+  },
+  immersed: {
+    title: '專注的',
+    description: '任意其中一種能力值 ≧150',
+    requirements: {
+      goal: (v: TrainingStatusNormalized) => {
+        return v.some(s => s >= 150) && !isAllEqual(v)
+      },
+      transformOperations: (operations: TrainingOperation[]) => {
+        const onlyNines = operations.filter(({ score }) => score === 9)
+        return onlyNines.length > 0 ? onlyNines : operations
+      },
+    },
+  },
 }

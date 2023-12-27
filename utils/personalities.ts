@@ -1,5 +1,5 @@
 import { TrainingType, allTrainingOperations } from './training'
-import type { TrainingRequirements, TrainingStatus } from './training'
+import type { TrainingRequirements } from './training'
 
 export interface Personality {
   title: string
@@ -7,8 +7,8 @@ export interface Personality {
   requirements?: TrainingRequirements
 }
 
-function isAllEqual(status: TrainingStatus): boolean {
-  return Object.values(status).every(v => v === status[0])
+function isAllEqual(status: TrainingStatusNormalized): boolean {
+  return status.every(v => v === status[0])
 }
 
 export const personalities: Record<string, Personality> = {
@@ -16,9 +16,9 @@ export const personalities: Record<string, Personality> = {
     title: '一絲不苟的',
     description: '4 能力值 (基礎值+訓練值) 總和 = 100；能力值之間不得相等，否則會是「平凡的」性格',
     requirements: {
-      goal: (v: TrainingStatus) => {
+      goal: (v: TrainingStatusNormalized) => {
         // Check if the sum is 100
-        const total = Object.values(v).reduce((acc, cur) => acc + cur, 0)
+        const total = v.reduce((acc, cur) => acc + cur, 0)
         return total === 100 && !isAllEqual(v)
       },
     },
@@ -27,7 +27,7 @@ export const personalities: Record<string, Personality> = {
     title: '漫不經心的',
     description: '4 項能力值 (基礎值+訓練值) 每項能力值之間相差 ≧15 (例如：0, 15, 30, 45)；不得訓練集中力（計算將會自動排除所有「集中力」訓練）',
     requirements: {
-      goal: (v: TrainingStatus) => {
+      goal: (v: TrainingStatusNormalized) => {
         for (let i: TrainingType = 0; i < 4; i++) {
           for (let j: TrainingType = i + 1; j < 4; j++) {
             if (Math.abs(v[i] - v[j]) < 15) {
@@ -47,10 +47,10 @@ export const personalities: Record<string, Personality> = {
     description: '4 種能力值 (基礎值+訓練值) 相同，總和 ≦100',
     requirements: {
       maxOperations: 12,
-      valid: (status: TrainingStatus) => Object.values(status).every((s) => {
+      valid: (status: TrainingStatusNormalized) => status.every((s) => {
         return s <= 25
       }),
-      goal: (v: TrainingStatus) => {
+      goal: (v: TrainingStatusNormalized) => {
         return v[0] <= 25 && isAllEqual(v)
       },
     },
@@ -59,8 +59,8 @@ export const personalities: Record<string, Personality> = {
     title: '孤獨的',
     description: '4 項能力值 (基礎值+訓練值) 的尾數皆 = 1；觀看數 = 1',
     requirements: {
-      goal: (v: TrainingStatus) => {
-        return Object.values(v).every(s => s % 10 === 1) && !isAllEqual(v)
+      goal: (v: TrainingStatusNormalized) => {
+        return v.every(s => s % 10 === 1) && !isAllEqual(v)
       },
     },
   },
@@ -68,7 +68,7 @@ export const personalities: Record<string, Personality> = {
     title: '有能力的',
     description: '4 能力值 (基礎值+訓練值) 總和 ≧104，4 能力值相同',
     requirements: {
-      goal: (v: TrainingStatus) => {
+      goal: (v: TrainingStatusNormalized) => {
         return v[0] >= 26 && isAllEqual(v)
       },
     },

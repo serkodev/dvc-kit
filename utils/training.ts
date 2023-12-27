@@ -14,6 +14,8 @@ export interface TrainingOperation {
 
 export type TrainingStatus = Record<TrainingType, number>
 
+export type TrainingStatusNormalized = [number, number, number, number]
+
 export const allTrainingOperations: TrainingOperation[] = [
   { type: TrainingType.agility, score: 3 },
   { type: TrainingType.agility, score: 5 },
@@ -43,17 +45,17 @@ export const allTrainingOperationsExpectFocus59: TrainingOperation[] = [
 ]
 
 export interface TrainingRequirements {
-  valid?: (status: TrainingStatus) => boolean
-  goal?: (status: TrainingStatus) => boolean
+  valid?: (status: TrainingStatusNormalized) => boolean
+  goal?: (status: TrainingStatusNormalized) => boolean
   transformOperations?: (operations: TrainingOperation[]) => TrainingOperation[]
   maxOperations?: number
 }
 
 export function getTrainedStatus(
-  status: TrainingStatus,
+  status: TrainingStatusNormalized,
   operations: TrainingOperation[],
-): TrainingStatus {
-  const cloneStatus = { ...status } as TrainingStatus
+): TrainingStatusNormalized {
+  const cloneStatus = [...status] as TrainingStatusNormalized
   for (const { type, score } of operations) {
     cloneStatus[type] += score
   }
@@ -73,20 +75,26 @@ export function calcMinimumOperations(
   if (goal === undefined)
     throw new Error('goal is required')
 
-  if (!valid(status))
+  const normalizeStatus: TrainingStatusNormalized = [
+    status[TrainingType.agility],
+    status[TrainingType.strength],
+    status[TrainingType.focus],
+    status[TrainingType.intellect],
+  ]
+
+  if (!valid(normalizeStatus))
     throw new Error('invalid status')
 
-  if (goal(status))
+  if (goal(normalizeStatus))
     return []
 
-  console.log('operations', operations)
   if (transformOperations) {
     operations = transformOperations(operations)
   }
 
   for (let numOps = 1; numOps <= maxOperations; numOps++) {
     for (const ops of product(operations, numOps)) {
-      const trainedStatus = getTrainedStatus(status, ops)
+      const trainedStatus = getTrainedStatus(normalizeStatus, ops)
       if (goal(trainedStatus)) {
         return ops
       }

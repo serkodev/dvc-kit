@@ -1,9 +1,3 @@
-<script setup lang="ts">
-const route = useRoute()
-
-const enableDragonList = computed(() => route.hash === '#dragon-list')
-</script>
-
 <template>
   <div>
     <div class="mx-auto max-w-xl px-4">
@@ -22,16 +16,14 @@ const enableDragonList = computed(() => route.hash === '#dragon-list')
       <div>
         資料來源 :
         <br>
-        <template v-if="enableDragonList">
-          <NuxtLink class="text-blue" to="https://github.com/YCCCCode/yccccode.github.io">
-            yccccode
-          </NuxtLink> 中文翻譯
-          <br>
-          <NuxtLink class="text-blue" to="https://github.com/jbilee/dvc">
-            jbilee
-          </NuxtLink>
-          <br>
-        </template>
+        <NuxtLink class="text-blue" to="https://github.com/YCCCCode/yccccode.github.io">
+          yccccode
+        </NuxtLink> 中文翻譯
+        <br>
+        <NuxtLink class="text-blue" to="https://github.com/jbilee/dvc">
+          jbilee
+        </NuxtLink>
+        <br>
         <NuxtLink class="text-blue" to="https://dragon-village-collection.fandom.com/wiki/Dragon_Village_Collection_Wiki">
           DVC Wiki
         </NuxtLink>

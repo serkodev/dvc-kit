@@ -44,7 +44,7 @@ function emitSelectedTrait() {
       <div class="w-full relative">
         <select v-model="selectedTraitIndex" class="appearance-none bg-transparent focus:outline-none w-full px-3">
           <option disabled value="-1">
-            {{ selectedDragon ? '選擇性格' : '-' }}
+            {{ selectedDragon ? '請選擇初始個性' : '-' }}
           </option>
           <template v-if="selectedDragon">
             <option v-for="trait, i in selectedDragon.traitsKo" :key="trait" :value="i">{{ trait }}</option>

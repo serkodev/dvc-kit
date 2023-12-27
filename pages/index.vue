@@ -2,6 +2,10 @@
 import { TrainingType } from '~/utils/training'
 import type { Personality } from '~/utils/personalities'
 
+const route = useRoute()
+
+const enableDragonList = computed(() => route.hash === '#dragon-list')
+
 const selectedPersonality = ref<Personality>(personalities.meticulous)
 
 const inputsBasic = ref({
@@ -101,7 +105,7 @@ function handleSelectedTrait(trait: TrainingStatus) {
       訓練性格計算器
     </h1>
 
-    <DragonSelector @selected-trait="handleSelectedTrait" />
+    <DragonSelector v-if="enableDragonList" @selected-trait="handleSelectedTrait" />
 
     <form class="space-y-8" @submit.prevent="handleSubmit">
       <section>

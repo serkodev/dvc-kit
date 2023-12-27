@@ -23,6 +23,9 @@ devDependencies:
   eslint:
     specifier: npm:eslint-ts-patch@^8.55.0-1
     version: /eslint-ts-patch@8.55.0-1
+  json5:
+    specifier: ^2.2.3
+    version: 2.2.3
   nuxt:
     specifier: ^3.8.2
     version: 3.8.2(eslint-ts-patch@8.55.0-1)(typescript@5.3.3)(vite@4.5.1)(vue-tsc@1.8.27)

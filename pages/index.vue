@@ -89,6 +89,10 @@ async function handleSubmit() {
 watch(selectedPersonality, () => {
   result.value = undefined
 })
+
+function handleSelectedTrait(trait: TrainingStatus) {
+  Object.assign(inputsBasic.value, trait)
+}
 </script>
 
 <template>
@@ -96,6 +100,8 @@ watch(selectedPersonality, () => {
     <h1 class="mt-4 text-2xl font-semibold">
       訓練性格計算器
     </h1>
+
+    <DragonSelector @selected-trait="handleSelectedTrait" />
 
     <form class="space-y-8" @submit.prevent="handleSubmit">
       <section>

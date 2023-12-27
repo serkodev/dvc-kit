@@ -14,12 +14,22 @@
 
     <footer class="mx-auto max-w-xl px-4 py-8 text-sm flex flex-col sm:flex-row items-center sm:justify-between">
       <div>
-        資料來源 : <NuxtLink class="text-blue" to="https://dragon-village-collection.fandom.com/wiki/Dragon_Village_Collection_Wiki">
+        資料來源 :
+        <br>
+        <NuxtLink class="text-blue" to="https://github.com/YCCCCode/yccccode.github.io">
+          yccccode
+        </NuxtLink> 中文翻譯
+        <br>
+        <NuxtLink class="text-blue" to="https://github.com/jbilee/dvc">
+          jbilee
+        </NuxtLink>
+        <br>
+        <NuxtLink class="text-blue" to="https://dragon-village-collection.fandom.com/wiki/Dragon_Village_Collection_Wiki">
           DVC Wiki
         </NuxtLink>
       </div>
 
-      <div>
+      <div class="self-start">
         Made by
         <NuxtLink class="text-blue" to="https://serko.dev/">
           SerKo

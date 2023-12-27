@@ -37,7 +37,7 @@ watch(totalScore, (score) => {
 </script>
 
 <template>
-  <TrainingItemFrame :title="operationTypeTitle(type)">
+  <TrainingItemFrame :type="type">
     <div class="flex gap-2 px-4 py-2 justify-between">
       <div class="flex items-center justify-center gap-2">
         <span class="text-sm text-green-700">基礎值</span>

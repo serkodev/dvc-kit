@@ -27,7 +27,7 @@ const targetScore = computed(() => props.scores.reduce<number>((acc, cur) => acc
 </script>
 
 <template>
-  <TrainingItemFrame :title="operationTypeTitle(type)">
+  <TrainingItemFrame :type="type">
     <div class="flex flex-col gap-2 px-3 py-3 bg-green-200 h-full">
       <div class="flex flex-col gap-1">
         <div class="flex items-center gap-2 bg-green-900 py-1 justify-center rounded">

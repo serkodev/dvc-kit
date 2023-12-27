@@ -9,7 +9,7 @@ const operations = defineModel<TrainingOperation[]>()
 </script>
 
 <template>
-  <TrainingItemFrame :title="operationTypeTitle(type)">
+  <TrainingItemFrame :type="type">
     <div class="grid grid-cols-3 gap-2 px-3 py-3 bg-green-200 h-full">
       <div>
         <TheCheckbox v-model="operations" :value="{ type, score: 3 }">

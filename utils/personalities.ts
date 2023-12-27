@@ -7,23 +7,19 @@ export interface Personality {
   requirements?: TrainingRequirements
 }
 
+function isAllEqual(status: TrainingStatus): boolean {
+  return Object.values(status).every(v => v === status[0])
+}
+
 export const personalities: Record<string, Personality> = {
   meticulous: {
     title: '一絲不苟的',
     requirementsDescription: '4 能力值 (基礎值+訓練值) 總和 = 100；能力值之間不得相等，否則會是「平凡的」性格',
     requirements: {
-      valid: (status: TrainingStatus) => Object.values(status).every((s) => {
-        return s <= 25
-      }),
       goal: (v: TrainingStatus) => {
         // Check if all values are different
-        for (let i = 0; i < 4; i++) {
-          for (let j = i + 1; j < 4; j++) {
-            if (v[i as TrainingType] === v[j as TrainingType]) {
-              return false
-            }
-          }
-        }
+        if (v[0] === 25 && isAllEqual(v))
+          return false
 
         // Check if the sum is 100
         const total = Object.values(v).reduce((acc, cur) => acc + cur, 0)
@@ -59,18 +55,7 @@ export const personalities: Record<string, Personality> = {
         return s <= 25
       }),
       goal: (v: TrainingStatus) => {
-        // Check if all values are same
-        for (let i: TrainingType = 0; i < 4; i++) {
-          for (let j: TrainingType = i + 1; j < 4; j++) {
-            if (v[i] !== v[j]) {
-              return false
-            }
-          }
-        }
-
-        // Check if the sum is <= 100
-        const total = Object.values(v).reduce((acc, cur) => acc + cur, 0)
-        return total <= 100
+        return v[0] <= 25 && isAllEqual(v)
       },
     },
   },
@@ -79,6 +64,9 @@ export const personalities: Record<string, Personality> = {
     requirementsDescription: '4 項能力值 (基礎值+訓練值) 的尾數皆 = 1；觀看數 = 1',
     requirements: {
       goal: (v: TrainingStatus) => {
+        if (isAllEqual(v))
+          return false
+
         for (let i: TrainingType = 0; i < 4; i++) {
           if (v[i] % 10 !== 1) {
             return false
@@ -93,18 +81,7 @@ export const personalities: Record<string, Personality> = {
     requirementsDescription: '4 能力值 (基礎值+訓練值) 總和 ≧104，4 能力值相同',
     requirements: {
       goal: (v: TrainingStatus) => {
-        // Check if all values are same
-        for (let i: TrainingType = 0; i < 4; i++) {
-          for (let j: TrainingType = i + 1; j < 4; j++) {
-            if (v[i] !== v[j]) {
-              return false
-            }
-          }
-        }
-
-        // Check if the sum is >= 104
-        const total = Object.values(v).reduce((acc, cur) => acc + cur, 0)
-        return total >= 104
+        return v[0] >= 26 && isAllEqual(v)
       },
     },
   },

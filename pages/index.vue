@@ -146,7 +146,7 @@ watch(selectedPersonality, () => {
             <div class="text-lg font-semibold mb-1">
               {{ selectedPersonality.title }}
             </div>
-            {{ selectedPersonality.requirementsDescription }}
+            {{ selectedPersonality.description }}
           </div>
         </div>
       </section>

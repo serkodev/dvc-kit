@@ -3,7 +3,7 @@ import type { TrainingRequirements, TrainingStatus } from './training'
 
 export interface Personality {
   title: string
-  requirementsDescription?: string
+  description?: string
   requirements?: TrainingRequirements
 }
 
@@ -14,7 +14,7 @@ function isAllEqual(status: TrainingStatus): boolean {
 export const personalities: Record<string, Personality> = {
   meticulous: {
     title: '一絲不苟的',
-    requirementsDescription: '4 能力值 (基礎值+訓練值) 總和 = 100；能力值之間不得相等，否則會是「平凡的」性格',
+    description: '4 能力值 (基礎值+訓練值) 總和 = 100；能力值之間不得相等，否則會是「平凡的」性格',
     requirements: {
       goal: (v: TrainingStatus) => {
         // Check if all values are different
@@ -29,7 +29,7 @@ export const personalities: Record<string, Personality> = {
   },
   distracted: {
     title: '漫不經心的',
-    requirementsDescription: '4 項能力值 (基礎值+訓練值) 每項能力值之間相差 ≧15 (例如：0, 15, 30, 45)；不得訓練集中力（計算將會自動排除所有「集中力」訓練）',
+    description: '4 項能力值 (基礎值+訓練值) 每項能力值之間相差 ≧15 (例如：0, 15, 30, 45)；不得訓練集中力（計算將會自動排除所有「集中力」訓練）',
     requirements: {
       goal: (v: TrainingStatus) => {
         for (let i: TrainingType = 0; i < 4; i++) {
@@ -48,7 +48,7 @@ export const personalities: Record<string, Personality> = {
   },
   dull: {
     title: '平凡的',
-    requirementsDescription: '4 種能力值 (基礎值+訓練值) 相同，總和 ≦100',
+    description: '4 種能力值 (基礎值+訓練值) 相同，總和 ≦100',
     requirements: {
       maxOperations: 12,
       valid: (status: TrainingStatus) => Object.values(status).every((s) => {
@@ -61,7 +61,7 @@ export const personalities: Record<string, Personality> = {
   },
   solitary: {
     title: '孤獨的',
-    requirementsDescription: '4 項能力值 (基礎值+訓練值) 的尾數皆 = 1；觀看數 = 1',
+    description: '4 項能力值 (基礎值+訓練值) 的尾數皆 = 1；觀看數 = 1',
     requirements: {
       goal: (v: TrainingStatus) => {
         if (isAllEqual(v))
@@ -78,7 +78,7 @@ export const personalities: Record<string, Personality> = {
   },
   capable: {
     title: '有能力的',
-    requirementsDescription: '4 能力值 (基礎值+訓練值) 總和 ≧104，4 能力值相同',
+    description: '4 能力值 (基礎值+訓練值) 總和 ≧104，4 能力值相同',
     requirements: {
       goal: (v: TrainingStatus) => {
         return v[0] >= 26 && isAllEqual(v)

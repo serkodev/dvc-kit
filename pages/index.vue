@@ -4,19 +4,18 @@ import type { Personality } from '~/utils/personalities'
 
 const selectedPersonality = ref<Personality>(personalities.meticulous)
 
-const inputs = shallowRef({
-  basic: {
-    [TrainingType.agility]: 0,
-    [TrainingType.focus]: 0,
-    [TrainingType.intellect]: 0,
-    [TrainingType.strength]: 0,
-  },
-  trained: {
-    [TrainingType.agility]: 0,
-    [TrainingType.focus]: 0,
-    [TrainingType.intellect]: 0,
-    [TrainingType.strength]: 0,
-  },
+const inputsBasic = ref({
+  [TrainingType.agility]: 0,
+  [TrainingType.focus]: 0,
+  [TrainingType.intellect]: 0,
+  [TrainingType.strength]: 0,
+})
+
+const inputsTrained = ref({
+  [TrainingType.agility]: 0,
+  [TrainingType.focus]: 0,
+  [TrainingType.intellect]: 0,
+  [TrainingType.strength]: 0,
 })
 
 const enableOptions = ref(false)
@@ -65,10 +64,10 @@ async function handleSubmit() {
   loading.value = true
 
   const status = {
-    [TrainingType.agility]: inputs.value.basic[TrainingType.agility] + inputs.value.trained[TrainingType.agility],
-    [TrainingType.focus]: inputs.value.basic[TrainingType.focus] + inputs.value.trained[TrainingType.focus],
-    [TrainingType.intellect]: inputs.value.basic[TrainingType.intellect] + inputs.value.trained[TrainingType.intellect],
-    [TrainingType.strength]: inputs.value.basic[TrainingType.strength] + inputs.value.trained[TrainingType.strength],
+    [TrainingType.agility]: inputsBasic.value[TrainingType.agility] + inputsTrained.value[TrainingType.agility],
+    [TrainingType.focus]: inputsBasic.value[TrainingType.focus] + inputsTrained.value[TrainingType.focus],
+    [TrainingType.intellect]: inputsBasic.value[TrainingType.intellect] + inputsTrained.value[TrainingType.intellect],
+    [TrainingType.strength]: inputsBasic.value[TrainingType.strength] + inputsTrained.value[TrainingType.strength],
   }
 
   setTimeout(() => {
@@ -78,7 +77,7 @@ async function handleSubmit() {
         (enableOptions.value ? JSON.parse(JSON.stringify(customOperations.value)) : undefined),
         selectedPersonality.value!.requirements,
       )
-      resultTrainedStatus.value = inputs.value.trained
+      resultTrainedStatus.value = JSON.parse(JSON.stringify(inputsTrained.value))
     } catch (e) {
       console.error(e)
       result.value = null
@@ -102,23 +101,23 @@ watch(selectedPersonality, () => {
       <section>
         <div class="grid sm:grid-cols-2 gap-2">
           <TrainingItem
-            v-model:basic="inputs.basic[TrainingType.agility]"
-            v-model:trained="inputs.trained[TrainingType.agility]"
+            v-model:basic="inputsBasic[TrainingType.agility]"
+            v-model:trained="inputsTrained[TrainingType.agility]"
             :type="TrainingType.agility"
           />
           <TrainingItem
-            v-model:basic="inputs.basic[TrainingType.strength]"
-            v-model:trained="inputs.trained[TrainingType.strength]"
+            v-model:basic="inputsBasic[TrainingType.strength]"
+            v-model:trained="inputsTrained[TrainingType.strength]"
             :type="TrainingType.strength"
           />
           <TrainingItem
-            v-model:basic="inputs.basic[TrainingType.focus]"
-            v-model:trained="inputs.trained[TrainingType.focus]"
+            v-model:basic="inputsBasic[TrainingType.focus]"
+            v-model:trained="inputsTrained[TrainingType.focus]"
             :type="TrainingType.focus"
           />
           <TrainingItem
-            v-model:basic="inputs.basic[TrainingType.intellect]"
-            v-model:trained="inputs.trained[TrainingType.intellect]"
+            v-model:basic="inputsBasic[TrainingType.intellect]"
+            v-model:trained="inputsTrained[TrainingType.intellect]"
             :type="TrainingType.intellect"
           />
         </div>

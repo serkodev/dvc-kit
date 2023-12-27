@@ -12,7 +12,19 @@
       <slot />
     </main>
 
-    <footer class="mx-auto max-w-xl px-4 py-8 text-sm flex flex-col sm:flex-row items-center sm:justify-between">
+    <footer class="mx-auto max-w-xl px-4 py-8 text-sm flex flex-col gap-4">
+      <div class="flex gap-1 items-center">
+        <div>
+          <span>Made by</span>
+          <NuxtLink class="text-blue" to="https://serko.dev/">
+            SerKo
+          </NuxtLink>
+        </div>
+        <NuxtLink class="text-gray" to="https://github.com/serkodev/dvc-kit">
+          <div class="i-tabler-brand-github text-lg" />
+        </NuxtLink>
+      </div>
+
       <div>
         資料來源 :
         <br>
@@ -24,15 +36,12 @@
           jbilee
         </NuxtLink>
         <br>
+        <NuxtLink class="text-blue" to="https://community.withhive.com/dvc/ko/board/22">
+          dvc@withhive
+        </NuxtLink>
+        <br>
         <NuxtLink class="text-blue" to="https://dragon-village-collection.fandom.com/wiki/Dragon_Village_Collection_Wiki">
           DVC Wiki
-        </NuxtLink>
-      </div>
-
-      <div class="self-start">
-        Made by
-        <NuxtLink class="text-blue" to="https://serko.dev/">
-          SerKo
         </NuxtLink>
       </div>
     </footer>

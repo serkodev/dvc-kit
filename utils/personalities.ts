@@ -17,13 +17,9 @@ export const personalities: Record<string, Personality> = {
     description: '4 能力值 (基礎值+訓練值) 總和 = 100；能力值之間不得相等，否則會是「平凡的」性格',
     requirements: {
       goal: (v: TrainingStatus) => {
-        // Check if all values are different
-        if (v[0] === 25 && isAllEqual(v))
-          return false
-
         // Check if the sum is 100
         const total = Object.values(v).reduce((acc, cur) => acc + cur, 0)
-        return total === 100
+        return total === 100 && !isAllEqual(v)
       },
     },
   },
@@ -64,15 +60,7 @@ export const personalities: Record<string, Personality> = {
     description: '4 項能力值 (基礎值+訓練值) 的尾數皆 = 1；觀看數 = 1',
     requirements: {
       goal: (v: TrainingStatus) => {
-        if (isAllEqual(v))
-          return false
-
-        for (let i: TrainingType = 0; i < 4; i++) {
-          if (v[i] % 10 !== 1) {
-            return false
-          }
-        }
-        return true
+        return Object.values(v).every(s => s % 10 === 1) && !isAllEqual(v)
       },
     },
   },

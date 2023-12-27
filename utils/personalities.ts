@@ -14,7 +14,7 @@ function isAllEqual(status: TrainingStatusNormalized): boolean {
 export const personalities: Record<string, Personality> = {
   meticulous: {
     title: '一絲不苟的',
-    description: '4 能力值 (基礎值+訓練值) 總和 = 100；能力值之間不得相等，否則會是「平凡的」性格',
+    description: '4 能力值 (基礎值+訓練值) 總和 = 100；不能 4 數值同時為25，否則會是「平凡的」性格',
     requirements: {
       goal: (v: TrainingStatusNormalized) => {
         // Check if the sum is 100

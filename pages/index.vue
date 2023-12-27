@@ -184,7 +184,7 @@ watch(selectedPersonality, () => {
         計算結果
       </h1>
       <div v-if="result === null" class="bg-red-200 py-4 text-center rounded-lg text-red-600">
-        目標無法達成
+        目標無法達成，或訓練次數過多
       </div>
       <div v-else-if="result.length === 0" class="bg-green-200 py-4 text-center rounded-lg text-green-600">
         已達成目標，無需進行訓練

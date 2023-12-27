@@ -79,7 +79,6 @@ export function calcMinimumOperations(
   if (goal(status))
     return []
 
-  console.log('operations', operations)
   if (transformOperations) {
     operations = transformOperations(operations)
   }
@@ -94,6 +93,28 @@ export function calcMinimumOperations(
   }
 
   return null
+}
+
+export function findShortestCombination(sum: number, addends: number[] = [3, 5, 9]) {
+  const combinations = Array.from<null | number[]>({ length: sum + 1 }).fill(null)
+  combinations[0] = []
+
+  for (let i = 1; i <= sum; i++) {
+    let shortestCombination = null
+
+    for (const addend of addends) {
+      if (i - addend >= 0 && combinations[i - addend] !== null) {
+        const combination = [...combinations[i - addend] || [], addend]
+        if (shortestCombination === null || combination.length < shortestCombination.length) {
+          shortestCombination = combination
+        }
+      }
+    }
+
+    combinations[i] = shortestCombination
+  }
+
+  return combinations[sum]
 }
 
 export function operationTypeTitle(type: TrainingType): string {

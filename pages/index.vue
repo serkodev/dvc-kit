@@ -6,16 +6,16 @@ const selectedPersonality = ref<Personality>(personalities.meticulous)
 
 const inputsBasic = ref({
   [TrainingType.agility]: 0,
+  [TrainingType.strength]: 0,
   [TrainingType.focus]: 0,
   [TrainingType.intellect]: 0,
-  [TrainingType.strength]: 0,
 })
 
 const inputsTrained = ref({
   [TrainingType.agility]: 0,
+  [TrainingType.strength]: 0,
   [TrainingType.focus]: 0,
   [TrainingType.intellect]: 0,
-  [TrainingType.strength]: 0,
 })
 
 const enableOptions = ref(false)
@@ -24,9 +24,9 @@ const customOperations = ref(allTrainingOperationsExpectFocus59)
 const result = ref<TrainingOperation[] | null | undefined>(undefined)
 const resultTrainedStatus = ref<TrainingStatus>({
   [TrainingType.agility]: 0,
+  [TrainingType.strength]: 0,
   [TrainingType.focus]: 0,
   [TrainingType.intellect]: 0,
-  [TrainingType.strength]: 0,
 })
 
 const loading = ref(false)
@@ -34,9 +34,9 @@ const loading = ref(false)
 const groupedResult = computed(() => {
   const group: Record<TrainingType, TrainingScore[]> = {
     [TrainingType.agility]: [],
+    [TrainingType.strength]: [],
     [TrainingType.focus]: [],
     [TrainingType.intellect]: [],
-    [TrainingType.strength]: [],
   }
 
   if (result.value) {
@@ -65,9 +65,9 @@ async function handleSubmit() {
 
   const status = {
     [TrainingType.agility]: inputsBasic.value[TrainingType.agility] + inputsTrained.value[TrainingType.agility],
+    [TrainingType.strength]: inputsBasic.value[TrainingType.strength] + inputsTrained.value[TrainingType.strength],
     [TrainingType.focus]: inputsBasic.value[TrainingType.focus] + inputsTrained.value[TrainingType.focus],
     [TrainingType.intellect]: inputsBasic.value[TrainingType.intellect] + inputsTrained.value[TrainingType.intellect],
-    [TrainingType.strength]: inputsBasic.value[TrainingType.strength] + inputsTrained.value[TrainingType.strength],
   }
 
   setTimeout(() => {

@@ -58,9 +58,9 @@ function emitSelectedTrait() {
   if (trait)
     emit('selectedTrait', {
       [TrainingType.agility]: trait[0],
-      [TrainingType.focus]: trait[1],
-      [TrainingType.intellect]: trait[2],
-      [TrainingType.strength]: trait[3],
+      [TrainingType.strength]: trait[1],
+      [TrainingType.focus]: trait[2],
+      [TrainingType.intellect]: trait[3],
     })
 }
 </script>

@@ -78,7 +78,7 @@ export function calcMinimumOperations(
     goal,
     valid = () => true,
     transformOperations,
-    maxOperations = 20,
+    maxOperations = 18,
   }: TrainingRequirements = {},
 ): TrainingOperation[] | null {
   if (goal === undefined)

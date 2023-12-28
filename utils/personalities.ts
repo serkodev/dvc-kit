@@ -16,6 +16,10 @@ export const personalities: Record<string, Personality> = {
     title: '一絲不苟的',
     description: '4 能力值 (基礎值+訓練值) 總和 = 100；不能 4 數值同時為25，否則會是「平凡的」個性',
     requirements: {
+      valid: (status: TrainingStatusNormalized) => {
+        const total = status.reduce((acc, cur) => acc + cur, 0)
+        return total <= 100
+      },
       goal: (v: TrainingStatusNormalized) => {
         // Check if the sum is 100
         const total = v.reduce((acc, cur) => acc + cur, 0)
@@ -113,6 +117,7 @@ export const personalities: Record<string, Personality> = {
     title: '專注的',
     description: '任意其中一種能力值 ≧150',
     requirements: {
+      maxOperations: 20,
       goal: (v: TrainingStatusNormalized) => {
         return v.some(s => s >= 150) && !isAllEqual(v)
       },

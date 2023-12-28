@@ -6,7 +6,7 @@ const emit = defineEmits<{
 }>()
 
 const inputDragon = ref('')
-const selectedDragon = computed(() => dragonList.find(dragon => dragon.name[1] === inputDragon.value))
+const selectedDragon = computed(() => dragonList.find(dragon => dragon.name === inputDragon.value))
 const selectedTraitIndex = ref(-1)
 
 watch(selectedDragon, () => {
@@ -18,9 +18,7 @@ watch(selectedTraitIndex, emitSelectedTrait)
 function emitSelectedTrait() {
   if (selectedTraitIndex.value === -1 || !selectedDragon.value)
     return
-
-  const selectedTraitKey = selectedDragon.value.traitsEn[selectedTraitIndex.value]
-  const trait = selectedDragon.value[selectedTraitKey] as number[]
+  const trait = selectedDragon.value.traits[selectedTraitIndex.value].status
   if (trait)
     emit('selectedTrait', {
       [TrainingType.agility]: trait[0],
@@ -36,7 +34,7 @@ function emitSelectedTrait() {
     <div class="flex-1">
       <input v-model="inputDragon" list="dragons" class="w-full border border-r-none rounded rounded-r-0 py-2 px-3" placeholder="輸入或選擇龍 ...">
       <datalist id="dragons">
-        <option v-for="dragon, i in dragonList" :key="i" :value="dragon.name[1]" />
+        <option v-for="dragon, i in dragonList" :key="i" :value="dragon.name" />
       </datalist>
     </div>
 
@@ -47,7 +45,7 @@ function emitSelectedTrait() {
             {{ selectedDragon ? '請選擇初始個性' : '-' }}
           </option>
           <template v-if="selectedDragon">
-            <option v-for="trait, i in selectedDragon.traitsKo" :key="trait" :value="i">{{ trait }}</option>
+            <option v-for="trait, i in selectedDragon.traits" :key="i" :value="i">{{ trait.name }}</option>
           </template>
         </select>
         <div class="absolute top-1 right-3 i-tabler:chevron-down pointer-events-none" />

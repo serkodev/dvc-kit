@@ -8,15 +8,19 @@ import {
   TransitionRoot,
 } from '@headlessui/vue'
 
-import { TrainingType } from '~/utils/training'
+import { type TrainingStatusNormalized, TrainingType } from '~/utils/training'
+
+const props = defineProps<{
+  userInputBasicStatus?: TrainingStatus
+}>()
 
 const emit = defineEmits<{
   selectedTrait: [trait: TrainingStatus]
 }>()
 
 const query = ref('')
-const selectedDragon = ref()
-const selectedTraitIndex = ref(-1)
+const selectedDragon = ref<Dragon>()
+const selectedTrait = ref<TrainingStatusNormalized | null>(null)
 
 const filteredDragonList = computed(() =>
   query.value === ''
@@ -29,16 +33,28 @@ const filteredDragonList = computed(() =>
     ),
 )
 
-watch(selectedDragon, () => {
-  selectedTraitIndex.value = -1
+const isShowRefreshButton = computed(() => {
+  if (!props.userInputBasicStatus || !selectedTrait.value)
+    return false
+
+  // check if the selected trait is the same as the current user input basic status
+  return props.userInputBasicStatus[TrainingType.agility] !== selectedTrait.value[0]
+    || props.userInputBasicStatus[TrainingType.focus] !== selectedTrait.value[1]
+    || props.userInputBasicStatus[TrainingType.intellect] !== selectedTrait.value[2]
+    || props.userInputBasicStatus[TrainingType.strength] !== selectedTrait.value[3]
 })
 
-watch(selectedTraitIndex, emitSelectedTrait)
+watch(selectedDragon, () => {
+  selectedTrait.value = null
+})
+
+watch(selectedTrait, emitSelectedTrait)
 
 function emitSelectedTrait() {
-  if (selectedTraitIndex.value === -1 || !selectedDragon.value)
+  if (!selectedTrait.value || !selectedDragon.value)
     return
-  const trait = selectedDragon.value.traits[selectedTraitIndex.value].status
+
+  const trait = selectedTrait.value
   if (trait)
     emit('selectedTrait', {
       [TrainingType.agility]: trait[0],
@@ -129,12 +145,12 @@ function emitSelectedTrait() {
 
     <label class="flex-1 flex items-center bg-slate-50 border rounded rounded-l-0">
       <div class="w-full relative">
-        <select v-model="selectedTraitIndex" class="appearance-none bg-transparent focus:outline-none w-full px-3">
-          <option disabled value="-1">
+        <select v-model="selectedTrait" class="appearance-none bg-transparent focus:outline-none w-full px-3">
+          <option disabled value="null">
             {{ selectedDragon ? '請選擇初始個性' : '-' }}
           </option>
           <template v-if="selectedDragon">
-            <option v-for="trait, i in selectedDragon.traits" :key="i" :value="i">{{ trait.name }}</option>
+            <option v-for="trait, i in selectedDragon.traits" :key="i" :value="trait.status">{{ trait.name }}</option>
           </template>
         </select>
         <div class="absolute top-1 right-3 i-tabler:chevron-down pointer-events-none" />
@@ -142,8 +158,9 @@ function emitSelectedTrait() {
     </label>
 
     <button
+      v-if="isShowRefreshButton"
       class="flex items-center justify-center py-2 px-2 ml-2 rounded bg-blue-100 hover:bg-blue-200 text-blue disabled:grayscale disabled:pointer-events-none"
-      :disabled="selectedTraitIndex === -1"
+      :disabled="!selectedTrait"
       @click.prevent="emitSelectedTrait"
     >
       <div class="i-tabler:refresh text-2xl" />

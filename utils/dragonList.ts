@@ -1,12 +1,12 @@
 import { type JbileeDragon, jbileeDragonList } from './dataset/rawdata'
 import { zhDragons, zhTraits } from './dataset/locales'
 
-interface DragonBasicTrait {
+export interface DragonBasicTrait {
   name: string
   status: TrainingStatusNormalized
 }
 
-interface Dragon {
+export interface Dragon {
   name: string
   traits: DragonBasicTrait[]
 }

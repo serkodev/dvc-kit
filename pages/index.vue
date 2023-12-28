@@ -105,7 +105,7 @@ function handleSelectedTrait(trait: TrainingStatus) {
       本工具可以幫助你計算出達成目標個性所需的最少訓練次數，並且自動產生龍的註釋，讓你可以輕鬆地在遊戲中進行訓練。
     </div>
 
-    <DragonSelector @selected-trait="handleSelectedTrait" />
+    <DragonSelector :user-input-basic-status="inputsBasic" @selected-trait="handleSelectedTrait" />
 
     <form class="space-y-8" @submit.prevent="handleSubmit">
       <section>

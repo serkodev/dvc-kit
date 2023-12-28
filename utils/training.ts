@@ -62,6 +62,15 @@ export function getTrainedStatus(
   return cloneStatus
 }
 
+export function normalizeStatus(status: TrainingStatus): TrainingStatusNormalized {
+  return [
+    status[TrainingType.agility] || 0,
+    status[TrainingType.strength] || 0,
+    status[TrainingType.focus] || 0,
+    status[TrainingType.intellect] || 0,
+  ]
+}
+
 export function calcMinimumOperations(
   status: TrainingStatus,
   operations: TrainingOperation[] = allTrainingOperations,
@@ -75,17 +84,12 @@ export function calcMinimumOperations(
   if (goal === undefined)
     throw new Error('goal is required')
 
-  const normalizeStatus: TrainingStatusNormalized = [
-    status[TrainingType.agility],
-    status[TrainingType.strength],
-    status[TrainingType.focus],
-    status[TrainingType.intellect],
-  ]
+  const normalizedStatus = normalizeStatus(status)
 
-  if (!valid(normalizeStatus))
+  if (!valid(normalizedStatus))
     throw new Error('invalid status')
 
-  if (goal(normalizeStatus))
+  if (goal(normalizedStatus))
     return []
 
   if (transformOperations) {
@@ -94,7 +98,7 @@ export function calcMinimumOperations(
 
   for (let numOps = 1; numOps <= maxOperations; numOps++) {
     for (const ops of product(operations, numOps)) {
-      const trainedStatus = getTrainedStatus(normalizeStatus, ops)
+      const trainedStatus = getTrainedStatus(normalizedStatus, ops)
       if (goal(trainedStatus)) {
         return ops
       }

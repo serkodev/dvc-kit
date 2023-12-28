@@ -46,12 +46,7 @@ const normalizedInput = computed(() => {
   if (!props.userInputBasicStatus)
     return null
 
-  return [
-    props.userInputBasicStatus[TrainingType.agility] || 0,
-    props.userInputBasicStatus[TrainingType.strength] || 0,
-    props.userInputBasicStatus[TrainingType.focus] || 0,
-    props.userInputBasicStatus[TrainingType.intellect] || 0,
-  ]
+  return normalizeStatus(props.userInputBasicStatus)
 })
 
 const isMatchUserInput = computed(() => {

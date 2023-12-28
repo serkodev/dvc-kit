@@ -17,7 +17,7 @@ const inputBasicScore = computed<string>({
     return basicScore.value === 0 ? '' : basicScore.value.toString()
   },
   set(value) {
-    basicScore.value = Number.parseInt(value)
+    basicScore.value = Number.parseInt(value) || 0
   },
 })
 
@@ -26,7 +26,7 @@ const inputTrainedScore = computed<string>({
     return trainedScore.value === 0 ? '' : trainedScore.value.toString()
   },
   set(value) {
-    trainedScore.value = Number.parseInt(value)
+    trainedScore.value = Number.parseInt(value) || 0
   },
 })
 

@@ -28,7 +28,7 @@
       <div>
         資料來源 :
         <br>
-        <NuxtLink class="text-blue" to="https://github.com/YCCCCode/yccccode.github.io">
+        <NuxtLink class="text-blue" to="https://github.com/YCCCCode">
           yccccode
         </NuxtLink> 中文翻譯
         <br>

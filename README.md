@@ -10,7 +10,7 @@ Some data in the project are sourced from the internet and the sources have been
 
 ## Data sources credit
 
-- [yccccode](https://github.com/YCCCCode/yccccode.github.io)
+- [yccccode](https://github.com/YCCCCode)
 - [jbilee](https://github.com/jbilee/dvc)
 - [dvc@withhive](https://community.withhive.com/dvc/ko/board/22)
 - [DVC Wiki](https://dragon-village-collection.fandom.com/wiki/Dragon_Village_Collection_Wiki)

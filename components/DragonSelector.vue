@@ -5,10 +5,13 @@ import {
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
+  Tab,
+  TabGroup,
+  TabList,
   TransitionRoot,
 } from '@headlessui/vue'
 
-import { type TrainingStatusNormalized, TrainingType } from '~/utils/training'
+import { TrainingType } from '~/utils/training'
 
 const props = defineProps<{
   userInputBasicStatus?: TrainingStatus
@@ -20,7 +23,13 @@ const emit = defineEmits<{
 
 const query = ref('')
 const selectedDragon = ref<Dragon>()
-const selectedTrait = ref<TrainingStatusNormalized | null>(null)
+const selectedTraitIndex = ref<number>(-1)
+
+const selectedTrait = computed(() => {
+  if (!selectedDragon.value || selectedTraitIndex.value === -1)
+    return null
+  return selectedDragon.value.traits[selectedTraitIndex.value].status
+})
 
 const filteredDragonList = computed(() =>
   query.value === ''
@@ -33,19 +42,27 @@ const filteredDragonList = computed(() =>
     ),
 )
 
-const isShowRefreshButton = computed(() => {
+const normalizedInput = computed(() => {
+  if (!props.userInputBasicStatus)
+    return null
+
+  return [
+    props.userInputBasicStatus[TrainingType.agility] || 0,
+    props.userInputBasicStatus[TrainingType.strength] || 0,
+    props.userInputBasicStatus[TrainingType.focus] || 0,
+    props.userInputBasicStatus[TrainingType.intellect] || 0,
+  ]
+})
+
+const isMatchUserInput = computed(() => {
   if (!props.userInputBasicStatus || !selectedTrait.value)
     return false
 
-  // check if the selected trait is the same as the current user input basic status
-  return props.userInputBasicStatus[TrainingType.agility] !== selectedTrait.value[0]
-    || props.userInputBasicStatus[TrainingType.focus] !== selectedTrait.value[1]
-    || props.userInputBasicStatus[TrainingType.intellect] !== selectedTrait.value[2]
-    || props.userInputBasicStatus[TrainingType.strength] !== selectedTrait.value[3]
+  return JSON.stringify(normalizedInput.value) === JSON.stringify(selectedTrait.value)
 })
 
 watch(selectedDragon, () => {
-  selectedTrait.value = null
+  selectTraits(0)
 })
 
 watch(selectedTrait, emitSelectedTrait)
@@ -63,16 +80,25 @@ function emitSelectedTrait() {
       [TrainingType.intellect]: trait[3],
     })
 }
+
+function selectTraits(index: number) {
+  if (!selectedDragon.value || selectedDragon.value.traits.length <= index) {
+    selectedTraitIndex.value = -1
+    return
+  }
+  selectedTraitIndex.value = index
+  emitSelectedTrait()
+}
 </script>
 
 <template>
   <div>
-    <form v-if="dragonList.length" class="flex">
+    <form v-if="dragonList.length" class="flex flex-col sm:flex-row gap-3">
       <div class="flex-1">
         <Combobox v-model="selectedDragon" class="z10">
           <div class="relative">
             <div
-              class="relative w-full rounded rounded-r-0 border border-r-none cursor-default overflow-hidden bg-white text-left"
+              class="relative w-full rounded-lg border cursor-default overflow-hidden bg-white text-left"
             >
               <ComboboxButton>
                 <ComboboxInput
@@ -95,8 +121,12 @@ function emitSelectedTrait() {
               @after-leave="query = ''"
             >
               <ComboboxOptions
-                class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white  text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
               >
+                <div v-if="!selectedDragon" class="px-4 py-2 text-blue-400 font-semibold bg-white border-b">
+                  艾弗利亞專屬品種的預設個性是固定的，不會出現在本選單中。
+                </div>
+
                 <div
                   v-if="filteredDragonList.length === 0 && query !== ''"
                   class="relative cursor-default select-none px-4 py-2 text-gray-700"
@@ -144,32 +174,26 @@ function emitSelectedTrait() {
         </datalist>
       </div>
 
-      <label class="flex-1 flex items-center bg-slate-50 border rounded rounded-l-0">
-        <div class="w-full relative">
-          <select v-model="selectedTrait" class="appearance-none bg-transparent focus:outline-none w-full px-3">
-            <option disabled value="null">
-              {{ selectedDragon ? '請選擇初始個性' : '-' }}
-            </option>
-            <template v-if="selectedDragon">
-              <option v-for="trait, i in selectedDragon.traits" :key="i" :value="trait.status">{{ trait.name }}</option>
-            </template>
-          </select>
-          <div class="absolute top-1 right-3 i-tabler:chevron-down pointer-events-none" />
-        </div>
-      </label>
-
-      <button
-        v-if="isShowRefreshButton"
-        class="flex items-center justify-center py-2 px-2 ml-2 rounded bg-blue-100 hover:bg-blue-200 text-blue disabled:grayscale disabled:pointer-events-none"
-        :disabled="!selectedTrait"
-        @click.prevent="emitSelectedTrait"
-      >
-        <div class="i-tabler:refresh text-2xl" />
-      </button>
+      <TabGroup v-if="selectedDragon" class="flex-1" :selected-index="selectedTraitIndex">
+        <TabList class="flex space-x-1 rounded-xl bg-yellow-900/20 p-1">
+          <Tab
+            v-for="trait, i in selectedDragon.traits"
+            :key="i"
+            as="template"
+          >
+            <button
+              class="w-full rounded-lg py-2 font-medium leading-5 focus:outline-none" :class="[
+                selectedTraitIndex === i && isMatchUserInput
+                  ? 'bg-white text-yellow-700 shadow'
+                  : 'text-yellow-700 op-50 hover:bg-white/[0.12] hover:op-65',
+              ]"
+              @click="selectTraits(i)"
+            >
+              {{ trait.name }}
+            </button>
+          </Tab>
+        </TabList>
+      </TabGroup>
     </form>
-
-    <div class="text-sm text-gray-400 mt-2">
-      由於在「艾弗利亞」專屬品種的預設個性是固定的，因此不會出現在選單中。
-    </div>
   </div>
 </template>

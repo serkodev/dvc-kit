@@ -74,7 +74,7 @@ async function handleSubmit() {
     try {
       result.value = calcMinimumOperations(
         status,
-        (trainingStore.preference.enableOptions ? JSON.parse(JSON.stringify(trainingStore.preference.enableOptions)) : undefined),
+        (trainingStore.preference.enableOptions ? JSON.parse(JSON.stringify(trainingStore.preference.customOperations)) : undefined),
         selectedPersonality.value!.requirements,
         trainingStore.preference.trainingOrder,
       )

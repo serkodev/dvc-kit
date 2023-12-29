@@ -184,7 +184,8 @@ function handleSelectedTrait(trait: TrainingStatus) {
           <template #item="{ element }">
             <div class="flex-1 bg-green-50 border-1 border-green-200 rounded px-2 py-1 cursor-pointer flex flex-col gap-2">
               <div class="handle flex w-full items-center text-xs sm:text-sm py-0.5">
-                <span class="flex-1 font-semibold">{{ operationTypeTitle(element) }}</span>
+                <TrainingIcon :type="element" class=" text-green-700 hidden sm:block text-base" />
+                <span class="flex-1 font-semibold sm:text-center">{{ operationTypeTitle(element) }}</span>
                 <div class="i-tabler-menu-2 text-green-400" />
               </div>
               <div v-if="trainingStore.preference.enableOptions">

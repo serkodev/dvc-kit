@@ -126,15 +126,6 @@ export function operationTypeTitle(type: TrainingType): string {
   ][type]
 }
 
-export function operationTypeIcon(type: TrainingType): string {
-  return [
-    'i-mingcute-shoe-fill -scale-x-100',
-    'i-mdi-arm-flex',
-    'i-ant-design-aim-outlined',
-    'i-majesticons-book-open',
-  ][type]
-}
-
 export function titleForScore(score: TrainingScore) {
   const title = {
     0: 'FAIL',

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mx-auto max-w-xl px-4">
+    <div class="mx-auto max-w-xl px-3">
       <div to="/" class="py-4 font-bold">
         <NuxtLink to="/">
           DVC Kit
@@ -8,11 +8,11 @@
       </div>
     </div>
 
-    <main class="mx-auto max-w-xl px-4">
+    <main class="mx-auto max-w-xl px-3">
       <slot />
     </main>
 
-    <footer class="mx-auto max-w-xl px-4 py-8 text-sm flex flex-col gap-4">
+    <footer class="mx-auto max-w-xl px-3 py-8 text-sm flex flex-col gap-4">
       <div class="flex gap-1 items-center">
         <div>
           <span>Made by</span>

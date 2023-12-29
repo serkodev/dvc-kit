@@ -163,52 +163,47 @@ function handleSelectedTrait(trait: TrainingStatus) {
 
       <section>
         <h3 class="text-xl font-semibold flex items-center justify-between gap-2">
-          訓練喜好順序
+          訓練偏好
 
           <button class="text-sm px-2 py-1 rounded bg-yellow-100 text-yellow-500" @click.prevent="trainingStore.reset">
             重置排序
           </button>
         </h3>
         <div class="my-3 text-sm text-neutral-500">
-          請將覺得容易達成的訓練放在前面，計算時將會優先使用，不會影響最少訓練次數。
+          滑動 <div class="i-tabler-menu-2 text-green-400 inline-block text-xs" /> 排序訓練，把你覺得容易達成的訓練放在前面，計算時將會優先使用，不會影響最少訓練次數。
         </div>
 
         <draggable
           v-model="trainingStore.preference.trainingOrder"
-          group="people"
+          handle=".handle"
+          group="prople"
           item-key="id"
-          class="flex gap-1.5 <sm:gap-1"
-          ghost-class="bg-green-300"
+          class="flex gap-1.5 <sm:gap-1 select-none"
+          ghost-class="!bg-green-300"
         >
           <template #item="{ element }">
-            <div class="bg-green-100 border-1 border-green-200 rounded px-2 py-1 cursor-pointer flex items-center gap-2 <sm:text-sm <sm:px-1 <sm:gap-1">
-              <div class="i-tabler-menu-2 text-green-400" />
-              <span class="font-semibold mr-0.5">{{ operationTypeTitle(element) }}</span>
+            <div class="flex-1 bg-green-50 border-1 border-green-200 rounded px-2 py-1 cursor-pointer flex flex-col gap-2">
+              <div class="handle flex w-full items-center text-xs sm:text-sm py-0.5">
+                <span class="flex-1 font-semibold">{{ operationTypeTitle(element) }}</span>
+                <div class="i-tabler-menu-2 text-green-400" />
+              </div>
+              <div v-if="trainingStore.preference.enableOptions">
+                <TrainingOptions v-model="trainingStore.preference.customOperations" :type="element" />
+              </div>
             </div>
           </template>
         </draggable>
-      </section>
 
-      <section class="flex flex-col gap-3">
-        <h2 class="text-xl font-semibold flex items-center gap-2">
-          特殊訓練要求
+        <h2 class="mt-4 text font-semibold flex items-center gap-2">
+          訓練分數要求
           <TheSwitcher v-model="trainingStore.preference.enableOptions" />
         </h2>
 
-        <template v-if="trainingStore.preference.enableOptions">
-          <div class="text-sm text-neutral-500">
-            當把部份訓練取消勾選時，計算時將強制不會使用該訓練的分數。<br>
-            例如你可以把比較難玩的集中力 +5 及 +9 取消勾選，來增加訓練的成功率。<br>
-            <span class="text-red">請注意，更改本設定可能會增加訓練次數。</span>
-          </div>
-
-          <div class="grid sm:grid-cols-2 gap-2">
-            <TrainingOptions v-model="trainingStore.preference.customOperations" :type="TrainingType.agility" />
-            <TrainingOptions v-model="trainingStore.preference.customOperations" :type="TrainingType.strength" />
-            <TrainingOptions v-model="trainingStore.preference.customOperations" :type="TrainingType.focus" />
-            <TrainingOptions v-model="trainingStore.preference.customOperations" :type="TrainingType.intellect" />
-          </div>
-        </template>
+        <div v-if="trainingStore.preference.enableOptions" class="mt-4 text-sm text-neutral-500">
+          當把部份訓練取消勾選時，計算時將強制不會使用該訓練的分數。<br>
+          例如你可以把比較難玩的集中力 +5 及 +9 取消勾選，來增加訓練的成功率。<br>
+          <span class="text-red">請注意，更改本設定可能會增加訓練次數。</span>
+        </div>
       </section>
 
       <input

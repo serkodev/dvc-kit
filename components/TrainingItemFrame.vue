@@ -6,12 +6,7 @@ const props = defineProps<{
 }>()
 
 const title = operationTypeTitle(props.type)
-const icon = [
-  'i-mingcute-shoe-fill -scale-x-100',
-  'i-mdi-arm-flex',
-  'i-ant-design-aim-outlined',
-  'i-majesticons-book-open',
-][props.type]
+const icon = operationTypeIcon(props.type)
 </script>
 
 <template>

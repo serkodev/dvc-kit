@@ -80,6 +80,7 @@ export function calcMinimumOperations(
     transformOperations,
     maxOperations = 18,
   }: TrainingRequirements = {},
+  trainingOrder?: TrainingType[],
 ): TrainingOperation[] | null {
   if (goal === undefined)
     throw new Error('goal is required')
@@ -94,6 +95,14 @@ export function calcMinimumOperations(
 
   if (transformOperations) {
     operations = transformOperations(operations)
+  }
+
+  if (trainingOrder) {
+    operations = operations.sort((a, b) => {
+      const aIndex = trainingOrder.indexOf(a.type)
+      const bIndex = trainingOrder.indexOf(b.type)
+      return aIndex - bIndex
+    })
   }
 
   for (let numOps = 1; numOps <= maxOperations; numOps++) {

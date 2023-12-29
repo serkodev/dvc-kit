@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import draggable from 'vuedraggable'
 import { TrainingType } from '~/utils/training'
 import type { Personality } from '~/utils/personalities'
 
 const selectedPersonality = ref<Personality>(personalities.meticulous)
+
+const trainingStore = useTrainingStore()
 
 const inputsBasic = ref({
   [TrainingType.agility]: 0,
@@ -17,9 +20,6 @@ const inputsTrained = ref({
   [TrainingType.focus]: 0,
   [TrainingType.intellect]: 0,
 })
-
-const enableOptions = ref(false)
-const customOperations = ref(allTrainingOperationsExpectFocus59)
 
 const result = ref<TrainingOperation[] | null | undefined>(undefined)
 const resultTrainedStatus = ref<TrainingStatus>({
@@ -74,8 +74,9 @@ async function handleSubmit() {
     try {
       result.value = calcMinimumOperations(
         status,
-        (enableOptions.value ? JSON.parse(JSON.stringify(customOperations.value)) : undefined),
+        (trainingStore.preference.enableOptions ? JSON.parse(JSON.stringify(trainingStore.preference.enableOptions)) : undefined),
         selectedPersonality.value!.requirements,
+        trainingStore.preference.trainingOrder,
       )
       resultTrainedStatus.value = JSON.parse(JSON.stringify(inputsTrained.value))
     } catch (e) {
@@ -160,23 +161,52 @@ function handleSelectedTrait(trait: TrainingStatus) {
         </div>
       </section>
 
-      <section class="space-y-3">
+      <section>
+        <h3 class="text-xl font-semibold flex items-center justify-between gap-2">
+          訓練喜好順序
+
+          <button class="text-sm px-2 py-1 rounded bg-yellow-100 text-yellow-500" @click.prevent="trainingStore.reset">
+            重置排序
+          </button>
+        </h3>
+        <div class="my-3 text-sm text-neutral-500">
+          請將覺得容易達成的訓練放在前面，計算時將會優先使用，不會影響最少訓練次數。
+        </div>
+
+        <draggable
+          v-model="trainingStore.preference.trainingOrder"
+          group="people"
+          item-key="id"
+          class="flex gap-1.5 <sm:gap-1"
+          ghost-class="bg-green-300"
+        >
+          <template #item="{ element }">
+            <div class="bg-green-100 border-1 border-green-200 rounded px-2 py-1 cursor-pointer flex items-center gap-2 <sm:text-sm <sm:px-1 <sm:gap-1">
+              <div class="i-tabler-menu-2 text-green-400" />
+              <span class="font-semibold mr-0.5">{{ operationTypeTitle(element) }}</span>
+            </div>
+          </template>
+        </draggable>
+      </section>
+
+      <section class="flex flex-col gap-3">
         <h2 class="text-xl font-semibold flex items-center gap-2">
           特殊訓練要求
-          <TheSwitcher v-model="enableOptions" />
+          <TheSwitcher v-model="trainingStore.preference.enableOptions" />
         </h2>
 
-        <template v-if="enableOptions">
-          <div class="my-2 text-sm text-neutral-500">
+        <template v-if="trainingStore.preference.enableOptions">
+          <div class="text-sm text-neutral-500">
             當把部份訓練取消勾選時，計算時將強制不會使用該訓練的分數。<br>
-            例如你可以把比較難玩的集中力 +5 及 +9 取消勾選，來增加訓練的成功率。
+            例如你可以把比較難玩的集中力 +5 及 +9 取消勾選，來增加訓練的成功率。<br>
+            <span class="text-red">請注意，更改本設定可能會增加訓練次數。</span>
           </div>
 
           <div class="grid sm:grid-cols-2 gap-2">
-            <TrainingOptions v-model="customOperations" :type="TrainingType.agility" />
-            <TrainingOptions v-model="customOperations" :type="TrainingType.strength" />
-            <TrainingOptions v-model="customOperations" :type="TrainingType.focus" />
-            <TrainingOptions v-model="customOperations" :type="TrainingType.intellect" />
+            <TrainingOptions v-model="trainingStore.preference.customOperations" :type="TrainingType.agility" />
+            <TrainingOptions v-model="trainingStore.preference.customOperations" :type="TrainingType.strength" />
+            <TrainingOptions v-model="trainingStore.preference.customOperations" :type="TrainingType.focus" />
+            <TrainingOptions v-model="trainingStore.preference.customOperations" :type="TrainingType.intellect" />
           </div>
         </template>
       </section>

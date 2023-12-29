@@ -12,12 +12,14 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@headlessui/vue": "^1.7.16"
+    "@headlessui/vue": "^1.7.16",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.0",
     "@iconify/json": "^2.2.161",
     "@nuxt/devtools": "latest",
+    "@pinia/nuxt": "^0.5.1",
     "@unocss/nuxt": "^0.58.0",
     "@vueuse/nuxt": "^10.7.0",
     "eslint": "npm:eslint-ts-patch@^8.55.0-1",

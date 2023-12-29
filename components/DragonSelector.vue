@@ -87,7 +87,7 @@ function selectTraits(index: number) {
             <div
               class="relative w-full rounded-lg border cursor-default overflow-hidden bg-white text-left"
             >
-              <ComboboxButton>
+              <ComboboxButton class="w-full">
                 <ComboboxInput
                   placeholder="輸入或選擇龍 ..."
                   class="w-full py-2.5 pl-3 pr-10 leading-5 text-gray-900 focus:ring-0 focus:outline-none"

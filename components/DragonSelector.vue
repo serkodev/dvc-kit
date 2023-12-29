@@ -42,25 +42,17 @@ const filteredDragonList = computed(() =>
     ),
 )
 
-const normalizedInput = computed(() => {
-  if (!props.userInputBasicStatus)
-    return null
-
-  return normalizeStatus(props.userInputBasicStatus)
-})
-
 const isMatchUserInput = computed(() => {
   if (!props.userInputBasicStatus || !selectedTrait.value)
     return false
 
-  return JSON.stringify(normalizedInput.value) === JSON.stringify(selectedTrait.value)
+  const normalize = normalizeStatus(props.userInputBasicStatus)
+  return JSON.stringify(normalize) === JSON.stringify(selectedTrait.value)
 })
 
 watch(selectedDragon, () => {
   selectTraits(0)
 })
-
-watch(selectedTrait, emitSelectedTrait)
 
 function emitSelectedTrait() {
   if (!selectedTrait.value || !selectedDragon.value)

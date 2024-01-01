@@ -125,6 +125,7 @@ export const zhDragons: Record<string, string> = {
   'Iron Dragon': '鋼鐵龍',
   'Irondeva': '鋼鐵德瓦',
   'Jango': '強格',
+  'Janus': '雅努斯',
   'Jarukah': '伽盧卡',
   'Jima': '鰭摩',
   'Jimon': '吉蒙',

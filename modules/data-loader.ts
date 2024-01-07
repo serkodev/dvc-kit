@@ -2,7 +2,7 @@ import { addVitePlugin, defineNuxtModule } from '@nuxt/kit'
 import JSON5 from 'json5'
 
 async function fetchRawData() {
-  const url = 'https://raw.githubusercontent.com/jbilee/dvc/main/calc/rawdata.js'
+  const url = 'https://raw.githubusercontent.com/jbilee/dvc/main/src/db.js'
   const content = await fetch(url).then(res => res.text())
 
   const dragonListRegex = /const dragonList\s*=\s*(\[(?:(?:[^[\]]|\[(?:[^\[\]]*)\])*)\]);?/s
